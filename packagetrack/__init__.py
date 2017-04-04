@@ -59,13 +59,6 @@ from .service.fedex_interface import FedexInterface
 from .service.ups_interface   import UPSInterface
 from .service.usps_interface  import USPSInterface
 
-__authors__     = 'Scott Torborg, Michael Stella'
-__credits__     = ['Scott Torborg','Michael Stella']
-__license__     = 'GPL'
-__maintainer__  = 'Scott Torborg'
-__status__      = 'Development'
-__version__     = '0.3.1'
-
 _interfaces = {}
 
 config = ConfigParser()

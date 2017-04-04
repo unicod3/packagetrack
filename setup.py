@@ -12,11 +12,16 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
-import packagetrack
+__authors__     = 'Scott Torborg, Michael Stella'
+__credits__     = ['Scott Torborg', 'Michael Stella']
+__license__     = 'GPL'
+__maintainer__  = 'Scott Torborg'
+__status__      = 'Development'
+__version__     = '0.3.1'
 
            
 setup(name='packagetrack',
-      version=packagetrack.__version__,
+      version=__version__,
       author="Scott Torborg",
       author_email="storborg@mit.edu",
       license="GPL",
