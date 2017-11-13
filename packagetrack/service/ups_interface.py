@@ -69,11 +69,18 @@ class UPSInterface(BaseInterface):
                 self._build_track_request(tracking_number))
 
     def _send_request(self, tracking_number):
-        body = self._build_request(tracking_number)
-        webf = urllib.urlopen(self.api_url, body)
-        resp = webf.read()
-        webf.close()
-        return resp
+        try:
+            data = self._build_request(tracking_number)
+            httpresq = urllib.request.Request(
+                url=self.api_url,
+                data=data.encode('utf_8'),
+                headers={'Content-Type': 'application/x-www-form-urlencoded'})
+            response = urllib.request.urlopen(httpresq)
+            return_values = response.read()
+            return return_values
+        except urllib.error.URLError as e:
+            error = "urllib.error.URLError exception was raised: %s" % e
+            return error
 
     def _parse_response(self, raw, tracking_number):
         root = xml_to_dict(raw)['TrackResponse']
