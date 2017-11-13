@@ -76,8 +76,7 @@ class UPSInterface(BaseInterface):
                 data=data.encode('utf_8'),
                 headers={'Content-Type': 'application/x-www-form-urlencoded'})
             response = urllib.request.urlopen(httpresq)
-            return_values = response.read()
-            return return_values
+            return response.read()
         except urllib.error.URLError as e:
             error = "urllib.error.URLError exception was raised: %s" % e
             return error
