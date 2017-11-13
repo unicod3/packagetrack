@@ -17,13 +17,13 @@ class FedexInterface(BaseInterface):
         return num.isdigit() and (len(num) in (12, 15, 20, 22))
 
     def track(self, tracking_number):
-        if not self.validate(tracking_number):
-            raise InvalidTrackingNumber()
+       # if not self.validate(tracking_number):
+       #     raise InvalidTrackingNumber()
 
         track = FedexTrackRequest(self._get_cfg())
 
-        track.TrackPackageIdentifier.Type = 'TRACKING_NUMBER_OR_DOORTAG'
-        track.TrackPackageIdentifier.Value = tracking_number
+        track.SelectionDetails.PackageIdentifier.Type = 'TRACKING_NUMBER_OR_DOORTAG'
+        track.SelectionDetails.PackageIdentifier.Value = tracking_number
         track.IncludeDetailedScans = True
 
         # Fires off the request, sets the 'response' attribute on the object.
@@ -41,7 +41,7 @@ class FedexInterface(BaseInterface):
                     track.response.Notifications[0].LocalizedMessage
                     ))
 
-        return self._parse_response(track.response.TrackDetails[0], tracking_number)
+        return self._parse_response(track.response.CompletedTrackDetails[0].TrackDetails[0], tracking_number)
 
 
     def url(self, tracking_number):
@@ -54,7 +54,7 @@ class FedexInterface(BaseInterface):
 
         # test status code, return actual delivery time if package
         # was delivered, otherwise estimated target time
-        if rsp.StatusCode == 'DL':
+        if rsp.StatusDetail.Code == 'DL':
             delivery_date = rsp.ActualDeliveryTimestamp
 
             # this may not be present
@@ -79,16 +79,15 @@ class FedexInterface(BaseInterface):
             last_update = rsp.Events[0].Timestamp
             location = self._getTrackingLocation(rsp.Events[0])
 
-
         # a new tracking info object
         trackinfo = TrackingInfo(
                     tracking_number = tracking_number,
                     last_update     = last_update,
-                    status          = rsp.StatusDescription,
+                    status          = rsp.StatusDetail.Description,
                     location        = location,
                     delivery_date   = delivery_date,
                     delivery_detail = delivery_detail,
-                    service         = rsp.ServiceType,
+                    service         = rsp.Service.Type,
                 )
 
         # now add the events
@@ -245,4 +244,3 @@ class FedexInterface(BaseInterface):
 
         # compare with the checksum digit, which is the last digit
         return check == int(tracking_number[-1:])
-
