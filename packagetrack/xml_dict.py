@@ -52,7 +52,7 @@ def xml_to_dict(s):
     """Convert XML data to a Python dict"""
     return nodeToDict(parseString(s))
 
-class NotTextNodeError: pass
+class NotTextNodeError(Exception): pass
 
 def getTextFromNode(node):
     """
