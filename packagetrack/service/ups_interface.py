@@ -173,6 +173,9 @@ class UPSInterface(BaseInterface):
             if 'City' in loc:
                 location = ','.join((loc['City'],
                                      loc['StateProvinceCode'],
+                                     # not every address has the postal code
+                                     loc['PostalCode'] if 'PostalCode' in
+                                                          loc else "", 
                                      loc['CountryCode']))
 
             edate = datetime.strptime(e['Date'], "%Y%m%d").date()
