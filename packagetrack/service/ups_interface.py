@@ -120,6 +120,9 @@ class UPSInterface(BaseInterface):
             loc = root['Shipment']['ShipTo']['Address']
             last_location = ','.join((loc['City'],
                                       loc['StateProvinceCode'],
+                                      # not every address has the postal code
+                                      loc['PostalCode'] if 'PostalCode' in
+                                                          loc else "",
                                       loc['CountryCode']))
             delivery_date = last_update
 
@@ -132,6 +135,9 @@ class UPSInterface(BaseInterface):
                 loc = activity['ActivityLocation']['Address']
                 last_location = ','.join((loc['City'],
                                           loc['StateProvinceCode'],
+                                          # not every address has the postal code
+                                          loc['PostalCode'] if 'PostalCode' in
+                                                          loc else "",
                                           loc['CountryCode']))
 
             # Delivery date is the last_update if delivered, otherwise
